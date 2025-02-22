@@ -5,6 +5,14 @@
    echo '<h1 class="text-custom"><a href="login.php">Login</a></h1>';
    exit();
  }
+ require_once('../controller/sql.php');
+
+ $patient = null;
+if (isset($_GET['patient_id'])) {
+    $patient_id = intval($_GET['patient_id']);
+    $patient = getPatientForTreatmentPlan($patient_id);
+}
+
 ?>
 
  <!DOCTYPE html>
@@ -55,28 +63,44 @@
     <p class="mb-1">Patient ID</p>
         <div class="mb-3">
         <div class="form-check form-check-inline">
-         <input class="form-control" type="text" name="p_id" id="p_id" placeholder="Enter patientID" required>
-        </div> 
+          <input class="form-control" type="text" name="p_id" id="p_id" placeholder="Enter patientID" 
+          value="<?= htmlspecialchars($patient['id'] ?? '') ?>" required>        </div> 
       </div>
     <p class="mb-1">Patient Name</p>
     <div class="mb-3">
     <div class="form-check form-check-inline">
-        <input class="form-control" type="text" name="p_name" id="p_name" placeholder="Enter patient name" required>
-     </div> 
+      <input class="form-control" type="text" name="p_name" id="p_name" placeholder="Enter patient name" 
+      value="<?= htmlspecialchars($patient['name'] ?? '') ?>" required>     </div> 
     </div>
     <p class="mb-1">Sex</p>
     <div class="mb-3">
     <div class="form-check form-check-inline">
-        <input class="form-check-input"  type="radio" name="sex" autocomplete="sex" id="male" value="Male"><label class="form-check-label" for="male"  required> Male</label>
+    <input 
+            class="form-check-input" 
+            type="radio" 
+            name="sex" 
+            id="male" 
+            value="Male" 
+            required 
+            <?= (isset($patient['sex']) && $patient['sex'] === 'Male') ? 'checked' : '' ?>
+        ><label class="form-check-label" for="male"  required> Male</label>
     </div>
     <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="sex" autocomplete="sex" id="female" value="Female"><label class="form-check-label" for="female" required> Female</label>
+    <input 
+            class="form-check-input" 
+            type="radio" 
+            name="sex" 
+            id="female" 
+            value="Female" 
+            required 
+            <?= (isset($patient['sex']) && $patient['sex'] === 'Female') ? 'checked' : '' ?>
+        ><label class="form-check-label" for="female" required> Female</label>
     </div>
     <p class="mb-1">KOOS score</p>
     <div class="mb-3">
     <div class="form-check form-check-inline">
-        <input class="form-control" type="text" name="p_koos" id="p_koos" placeholder="Enter KOOS score of your patient" required>
-     </div> 
+      <input class="form-control" type="text" name="p_koos" id="p_koos" placeholder="Enter KOOS score of the patient" 
+      value="<?= number_format(htmlspecialchars($patient['koos_score'] ?? ''),2) ?>" required>     </div> 
     </div>
     <p class="mb-1">Diagnosis</p>
     <div class="mb-3">

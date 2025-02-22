@@ -1,5 +1,11 @@
 <?php
 require_once("../controller/TreatmentResultsController.php"); 
+if (isset($_GET['logout'])) {
+  session_unset(); // Remove all session variables
+  session_destroy(); // Destroy the session
+  header("Location: login.php"); // Redirect to the login page
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +91,9 @@ require_once("../controller/TreatmentResultsController.php");
                             <p class="card-text"><strong>Doctor's Signature:</strong></p>
                             <p class="card-text"><img src="../doctor_signature/<?= htmlspecialchars($treatment->signature_doctor) ?>" alt="Doctor Signature" style="width: 200px; height: auto; border: 1px solid #000;" /></p>
                             <p class="card-text"><strong>Date: </strong><?= htmlspecialchars($treatment->d_date) ?></p>
-                            <button type="button" onclick="downloadPageAsPDF()">Download as PDF</button>                        </div>
+                            <button type="button" onclick="downloadPageAsPDF()">Download as PDF</button> 
+                            <a href="?logout=true" class="btn btn-danger btn-sm">Logout</a>
+                            </div>
                     </div>
                 </div>
             <?php endforeach; ?>

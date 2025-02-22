@@ -13,7 +13,6 @@ $receiver_id = $_GET['receiver_id'] ?? null;
 
 if (!$sender_id) {
     echo json_encode(["error" => "Sender ID is missing"]);
-    exit();
 }
 
 $messages = getChatHistory($sender_id, $receiver_id);
@@ -23,7 +22,6 @@ if (!$messages) {
 } else {
     echo json_encode(["status" => "success", "messages" => $messages]);
 }
-exit();
 
 
 $chatObjects = [];

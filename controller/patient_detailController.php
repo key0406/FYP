@@ -40,6 +40,10 @@ function getPatientDetails() {
         $patient->age = $data['age'] ?? '-';
         $patient->gap = $data['gap'] ?? '-';
         $patient->koos = number_format($data['koos_score'], 2); // Format KOOS score to 2 decimal places
+        $koos_score = number_format($data['koos_score'], 2);
+        if($koos_score <60.0 ){
+             
+        }
         $patientObjects[] = $patient;
     }
 
@@ -94,6 +98,17 @@ function getPatientByName($name) {
 
     return $patientObjects;
 }
+//Delete function for patient id
+function handleDeleteRequest() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+        $id = $_POST['delete_id'];
+        if (deletePatient($id)) {
+            echo "<script>alert('Patient deleted successfully.'); window.location.href = 'patient_detail.php';</script>";
+        } else {
+            echo "<script>alert('Error deleting patient. Please try again.');</script>";
+        }
+    }
+}
 
 // Decide which function to use based on the search input
 function handlePatientSearch() {
@@ -102,4 +117,7 @@ function handlePatientSearch() {
     }
     return getPatientDetails(); // Fetch all patients if no search term
 }
+
+
+
 ?>

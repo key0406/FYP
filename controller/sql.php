@@ -103,6 +103,16 @@ function getPatientByFKOOS($f_koos){
     $results = $statement->fetchAll(PDO::FETCH_CLASS, "survey");
     return $results;
 }
+function deletePatient($id) {
+    global $pdo;
+    try {
+        $statement = $pdo->prepare("DELETE FROM survey WHERE id = ?");
+        return $statement->execute([$id]);
+    } catch (Exception $e) {
+        error_log("Error deleting patient: " . $e->getMessage());
+        return false;
+    }
+}
 
 function getComment($comment){
     global $pdo;
@@ -112,12 +122,26 @@ function getComment($comment){
     return $results;
 }
 
-function getAllPatientTreatment(){
+function getAllPatientTreatment($id){
     global $pdo;
     $statement = $pdo->prepare("SELECT * FROM treatment_plan");
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_CLASS, "treatment");
     return $results;
+}
+
+function getPatientForTreatmentPlan($id){
+    global $pdo;
+    $statement = $pdo->prepare("SELECT id, name, sex, 
+                                (100 - (p1 + p2 + p3 + p4) / (4 * 4) * 100) AS pain_score,
+                                (100 - (f1 + f2 + f3 + f4) / (4 * 4) * 100) AS function_score,
+                                (100 - (q1 + q2 + q3 + q4) / (4 * 4) * 100) AS qol_score,
+                                ((100 - (p1 + p2 + p3 + p4) / (4 * 4) * 100) + 
+                                 (100 - (f1 + f2 + f3 + f4) / (4 * 4) * 100) + 
+                                 (100 - (q1 + q2 + q3 + q4) / (4 * 4) * 100)) / 3 AS koos_score
+                            FROM survey WHERE id = ?");
+    $statement->execute([$id]);
+    return $statement->fetch(PDO::FETCH_ASSOC); // Fetching a single row
 }
 
 /*function chatRequest($doctor, $patient){

@@ -1,0 +1,616 @@
+<style>
+  /* Custom styles to show text size differences */
+      .text-custom {
+        font-size: 80px; /* Default size for all screens */
+      }
+      @media (min-width: 992px) {
+        .text-custom {
+          font-size: initial; /* Reset size for large screens */
+        }
+      }
+    </style>
+<?php
+session_start();
+if (empty($_SESSION['auth']) ) {
+  echo '<h1 class="text-custom">Please login to the portal</h1><br>';
+  echo '<h1 class="text-custom"><a href="portal_en.html">Login</a></h1>';
+  exit();
+}
+if (!empty($_GET['lang'])) $lang = $_GET['lang'];
+else $lang = 'en';
+$path = 'lang/'.$lang.'.json';
+$file = fopen($path, "r");
+$json = fread($file, filesize($path));
+$tls = json_decode($json, true);
+?>
+<!DOCTYPE html>
+<html lang="<?php echo $lang?>"<?php if($lang =='ar') echo ' dir="rtl"'?>>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title><?= $tls['title'] ?></title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    #counter{
+      width: 48px;
+    }
+    p.confidential{
+        font-family: "Times New Roman", Times, serif;
+        text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <span class="fs-4"><?= $tls['title'] ?></span>
+    </header>
+    <p><?= $tls['introduction']?></p>
+    <select id="langselect" class="form-select d-inline-block w-auto">
+        <option></option>
+        <option value="en" lang="en">English</option>
+        <option value="fr" lang="fr">français</option>
+        <option value="es" lang="es">español</option>
+        <option value="pt-BR" lang="pt-BR">português</option>
+        <option value="zh-CN" lang="zh-CN">中文（簡体）</option>
+        <option value="zh-TW" lang="zh-TW">中文（繁体）</option>
+        <option value="ko" lang="ko">한국어</option>
+        <option value="id" lang="id">Bahasa Indonesia</option>
+        <option value="th" lang="th">ภาษาไทย</option>
+        <option value="hi" lang="hi">हिन्दी</option>
+        <option value="vi" lang="vi">Tiếng Việt</option>
+        <option value="tl" lang="tl">Tagalog</option>
+        <option value="ru" lang="ru">Русский</option>
+        <option value="ar" lang="ar">اَلْعَرَبِيَّةُ</option>
+    </select>
+
+    <form class="h-adr" method="post" action="PatientformController_en.php">
+    <input type="hidden" name="lang" value="<?= $lang ?>">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6><?= $tls['profile'] ?></h6>
+          <p><label class="form-label" for="fname"><?= $tls['fname'] ?> <span class="badge text-bg-secondary" required></span></label><input class="form-control"  type="text" name="fname" id="fname" autocomplete="given-name" placeholder="<?= $tls['fname'] ?>" required></p>
+          <p><label class="form-label" for="mname"><?= $tls['mname'] ?> <span class="badge text-bg-secondary"></span></label><input class="form-control"  type="text" name="mname" id="mname" autocomplete="additional-name" placeholder="<?= $tls['mname'] ?>" ></p>
+          <p><label class="form-label" for="lname"><?= $tls['lname'] ?><span class="badge text-bg-secondary" required></span></label><input class="form-control"  type="text" name="lname" id="lname"  autocomplete="family-name" placeholder="<?= $tls['lname'] ?>" required></p>
+
+          <p class="mb-1"><?= $tls['sex']?></p>
+          <div class="mb-2">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="radio" name="sex" autocomplete="sex" id="male" value="<?= $tls['male'] ?>"><label class="form-check-label" for="male"  required><?= $tls['male'] ?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="sex" autocomplete="sex" id="female" value="<?= $tls['female'] ?>"><label class="form-check-label" for="female" required><?= $tls['female']; ?></label>
+            </div>
+          </div>
+
+          <p class="mb-1"><?= $tls['date of Birth'] ?></p>
+          <p>
+            <select name="day" id="day" class="form-select d-inline-block w-auto" autocomplete="bday-day" required>
+                <option></option>
+            </select> 
+            <select name="month" id="month" class="form-select d-inline-block w-auto" autocomplete="bday-month" required><option></option>
+            </select>, 
+            <select name="year" id="year" class="form-select d-inline-block w-auto" autocomplete="bday-year" required><option></option>
+            </select>
+          </p>
+
+          <p>
+            <label class="form-label" for="nationality"><?= $tls['nationality'] ?></label>
+            <input type="text" name="nationality" id="nationality" class="form-control p-country-name" autocomplete="country-name" placeholder="<?= $tls['nationality'] ?>" required>
+          </p>
+
+          <p>
+            <label class="form-label" for="language"><?= $tls['lang'] ?></label>
+            <input type="text" name="language" id="language" class="form-control " placeholder="<?= $tls['lang_place'] ?>" required>
+          </p>
+
+          <p>
+            <label class="form-label" class="form-label" for="countryname"><?= $tls['country'] ?></label>
+            <input type="text" name="countryname" id="countryname" class="form-control p-region p-locality p-street-address p-extended-address" autocomplete="country-name" placeholder="<?= $tls['country'] ?>" required >
+          </p>
+
+          <p>
+            <label class="form-label" class="form-label" for="state"><?= $tls['state'] ?></label>
+            <input type="text" name="state" id="state" class="form-control p-region p-locality p-street-address p-extended-address" autocomplete="address-level1" placeholder="<?= $tls['state'] ?>" required >
+          </p>
+
+          <p>
+            <label class="form-label" class="form-label" for="city"><?= $tls['city'] ?></label>
+            <input type="text" name="city" id="city" class="form-control p-region p-locality p-street-address p-extended-address" autocomplete="address-level2" placeholder="<?= $tls['city'] ?>" required>
+          </p>
+
+          <p>
+            <label class="form-label" class="form-label" for="address1"><?= $tls['address1']; ?></label>
+            <input type="text" name="address1" id="address1" class="form-control p-region p-locality p-street-address p-extended-address" autocomplete="address-line1" placeholder="<?= $tls['address1'] ?>" required>
+          </p>
+            
+          <p>
+            <label class="form-label" for="address2"><?= $tls['address2'] ?></label>
+            <input type="text" name="address2" id="address2" class="form-control" autocomplete="address-line2" placeholder="<?= $tls['address2'];; ?>" >
+          </p>
+
+          <p>
+            <label class="form-label" for="postalcode"><?= $tls['postalcode'] ?></label>
+            <input type="text" name="postalcode" id="postalcode" class="form-control p-postal-code" autocomplete="postal-code" placeholder="<?= $tls['postalcode'] ?>" required >
+          </p>
+
+          <p>
+            <label class="form-label" for="tel"><?= $tls['phonenum'] ?></label>
+            <input type="text" name="tel" id="tel" autocomplete="tel" class="form-control" placeholder="<?= $tls['tel'] ?>" required></label>
+          </p>
+
+          <p>
+            <label class="form-label" for="email"><?= $tls['email'] ?></label>
+            <input type="email" name="email" id="email" autocomplete="email" class="form-control" placeholder="<?= $tls['email'] ?>" required></label>
+          </p>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="mb-0"><?= $tls['method'] ?></p>
+          <div class="mb-1">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="contact_means" id="mean_tel" value="tel"><label class="form-check-label" for="mean_tel"><?= $tls['mean_tel'] ?></label>
+            </div>
+            （<?= $tls['contacthours'] ?>: <select name="contacthours" id="contacthours" class="form-select d-inline-block w-auto" disabled required>
+              <option>9</option>
+              <option>10</option>
+              <option>11</option>
+              <option>12</option>
+              <option>13</option>
+              <option>14</option>
+              <option>15</option>
+              <option>16</option>
+              <option>17</option>
+              <option>18</option>
+            </select>）
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="contact_means" id="mean_email" value="<?= $tls['email'] ?>"><label class="form-check-label" for="mean_email"> <?= $tls['email'] ?></label>
+          </div>
+          <div class="form-check mb-2 ">
+            <input class="form-check-input"  type="radio" name="contact_means"  id="meansothercheck" value="others"> <label class="form-check-label" for="meansothercheck"><?= $tls['others'] ?></label>  
+          </div>
+          <div class="col-auto">
+            <input type="text" class="form-control d-inline-block" name="meansothers" id="meansothers" placeholder="<?= $tls['meansothers'] ?>" disabled required>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="mb-0"><?= $tls['visit_reasons'] ?> <span class="badge text-bg-danger"> <?=$tls['required']?></span></p>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="purpose" id="examine" value="<?= $tls['examine'] ?>"><label class="form-check-label" for="examine" required> <?= $tls['examine'] ?></label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input"  type="radio" name="purpose" id="consult" value="<?= $tls['consult'] ?>"><label class="form-check-label" for="consult" required> <?= $tls['consult'] ?></label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input"  type="radio" name="purpose"  id="purposeotherscheck" value="others"> <label class="form-check-label" for="purposeotherscheck" required><?= $tls['others'] ?></label>  
+          </div>
+          <div class="col-auto mb-3">
+            <input type="text" class="form-control d-inline-block" name="purposeothers" id="purposeothers" placeholder="<?= $tls['purposeothers'] ?>" disabled required>
+          </div>
+          <p><label class="form-label" for="incident"><?= $tls['incident_title'] ?></label><br>
+            <input class="form-control" type="text" name="incident" id="incident" placeholder="<?= $tls['incident'] ?>">
+          </p>
+          <p><label class="form-label" for="incident"><?= $tls['symp_title'] ?> <span class="badge text-bg-danger"><?= $tls['required'] ?></span></label><br>
+          </p>
+          <div id="details">
+            <p>
+              <input class="form-control" type="text" name="where" id="where" placeholder="<?= $tls['where'] ?>"  required>
+            </p>
+
+            <p>
+              <input class="form-control" type="text" name="how" id="how" placeholder="<?= $tls['how'] ?>"  required>
+            </p>
+
+            <p>
+              <input class="form-control" type="text" name="when" id="when" placeholder="<?= $tls['when'] ?>"  required>
+            </p>
+          </div>
+          </p>
+          
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p><label class="form-label" for="medicine"><?= $tls['medicine_title'] ?></label><br>
+            <input class="form-control" type="text" name="medicine" id="medicine" placeholder="<?= $tls['medicine_title'] ?>">
+          </p>
+
+          <p><label class="form-label" for="allergy"><?= $tls['allergy'] ?></label><br>
+            <input class="form-control" type="text" name="allergy" id="allergy" placeholder="<?= $tls['allergy'] ?>">
+          </p>
+          
+          <p class="mb-1"><?= $tls['surgery_title'] ?> <span class="badge text-bg-danger"><?= $tls['required'] ?></span></p>
+          <div class="mb-2">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="radio" name="op_exp" id="op_yes" value="yes" required><label class="form-check-label" for="op_yes" ><?= $tls['yes'] ?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="op_exp" id="op_no" value="no" required><label class="form-check-label" for="op_no"><?= $tls['no'] ?></label>
+            </div>
+          </div>
+          
+          <div id="op_details">
+            <p>
+              <input class="form-control" type="text" name="op_symp" id="op_symp" placeholder="<?= $tls['op_symp'] ?>" disabled required>
+            </p>
+
+            <p>
+              <input class="form-control" type="text" name="op_when" id="op_when" placeholder="<?= $tls['when'] ?>" disabled required>
+            </p>
+
+            <p>
+              <input class="form-control" type="text" name="op_hosp" id="op_hosp" placeholder="<?= $tls['op_hosp'] ?>" disabled required>
+            </p>
+          </div>
+          
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="mb-1"><?= $tls['history_title'] ?></p>
+          <div class="mb-2">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_hyper" value="<?= $tls['his_hyper'] ?>" ><label class="form-check-label" for="his_hyper"><?= $tls['his_hyper'] ?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_diab" value="<?= $tls['his_diab'] ?>" ><label class="form-check-label" for="his_diab"><?= $tls['his_diab'] ?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_asthma" value="<?= $tls['his_asthma'] ?>" ><label class="form-check-label" for="his_asthma"><?= $tls['his_asthma'] ?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_card" value="<?= $tls['his_card'] ?>" ><label class="form-check-label" for="his_card"><?= $tls['his_card'] ?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_renal" value="<?= $tls['his_renal'] ?>" ><label class="form-check-label" for="his_renal"><?= $tls['his_renal'] ?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_GU" value="<?=$tls['his_GU']?>" ><label class="form-check-label" for="his_GU"><?=$tls['his_GU']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_hepa" value="<?=$tls['his_hepa']?>" ><label class="form-check-label" for="his_hepa"><?=$tls['his_hepa']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_stroke" value="<?=$tls['his_stroke']?>" ><label class="form-check-label" for="his_stroke"><?=$tls['his_stroke']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_hemorrage" value="<?=$tls['his_hemorrage']?>" ><label class="form-check-label" for="his_hemorrage"><?=$tls['his_hemorrage']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_gout" value="<?=$tls['his_gout']?>" ><label class="form-check-label" for="his_gout"><?=$tls['his_gout']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]" id="his_tumor" value="<?=$tls['his_tumor']?>" ><label class="form-check-label" for="his_tumor"><?=$tls['his_tumor']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="checkbox" name="history[]"  id="historyotherscheck" value="others" > <label class="form-check-label" for="historyotherscheck" required><?=$tls['others']?></label>  
+            </div>
+            <div class="col-auto mb-3">
+              <input type="text" class="form-control d-inline-block" name="historyothers" id="historyothers" placeholder="<?=$tls['historyothers']?>" disabled required>
+            </div>
+          </div>
+          <div id="history_details">
+            <p>
+              <input class="form-control" type="text" name="hist_who" id="hist_who" placeholder="<?=$tls['hist_who']?>" disabled required>
+            </p>
+
+            <p>
+              <input class="form-control" type="text" name="hist_when" id="hist_when" placeholder="<?=$tls['when']?>" disabled required>
+            </p>
+
+            <p>
+              <input class="form-control" type="text" name="hist_hosp" id="hist_hosp" placeholder="<?=$tls['hist_hosp']?>" disabled required>
+            </p>
+            <div class="mb-2">
+              <p><?=$tls['commuting']?></p>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input"  type="radio" name="commuting" id="commuting_yes" value="<?=$tls['yes']?>" disabled required><label class="form-check-label" for="commuting_yes"><?=$tls['yes']?></label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="commuting" id="commuting_no" value="<?=$tls['no']?>" disabled required><label class="form-check-label" for="commuting_no"><?=$tls['no']?></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="mb-1"><?=$tls['alcohol']?> <span class="badge text-bg-danger"><?=$tls['required']?></span></p>
+          <div class="mb-2">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="radio" name="alcohol" id="alc_yes" value="<?=$tls['yes']?>" required ><label class="form-check-label" for="alc_yes"><?=$tls['yes']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="alcohol" id="alc_no" value="<?=$tls['no']?>" required ><label class="form-check-label" for="alc_no"><?=$tls['no']?></label>
+            </div>
+          </div>
+          <p class="mb-1"><?=$tls['smoke']?> <span class="badge text-bg-danger"><?=$tls['required']?></span></p>
+          <div class="mb-2">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="radio" name="tobacco" id="tob_yes" value="<?=$tls['yes'] ?>"<?=$tls['required']?>><label class="form-check-label" for="tob_yes"><?=$tls['yes']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="tobacco" id="tob_no" value="<?=$tls['no']?>" <?=$tls['required']?> ><label class="form-check-label" for="tob_no"><?=$tls['no']?></label>
+            </div>
+          </div>  
+          <p class="mb-1"><?=$tls['appetite']?> <span class="badge text-bg-danger"><?=$tls['required']?></span></p>
+          <div class="mb-2">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"  type="radio" name="appetite" id="app_yes" value="<?=$tls['yes']?>" required ><label class="form-check-label" for="app_yes"> <?=$tls['yes']?></label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="appetite" id="app_no" value="<?=$tls['no']?>" required><label class="form-check-label" for="app_no"> <?=$tls['no']?></label>
+            </div>
+          </div>
+          
+          <p class="mb-1"><?=$tls['bowel']?><span class="badge text-bg-danger"><?=$tls['required']?></span></p>
+          <div class="mb-2">
+            <div class="form-check mb-2">
+              <input class="form-check-input"  type="checkbox" name="bowel[]" id="bow_norm" value="<?=$tls['bow_norm']?>" required><label class="form-check-label" for="bow_norm"> <?=$tls['bow_norm']?></label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="bowel[]" id="bow_diar" value="<?=$tls['bow_diar']?>" required><label class="form-check-label" for="bow_diar"> <?=$tls['bow_diar']?></label>
+            </div>
+            <div class="form-check form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="bowel[]" id="bow_const" value="<?=$tls['bow_const']?>" required><label class="form-check-label" for="bow_const"> <?=$tls['bow_const']?></label>
+            </div>
+          </div>
+          <p class="mb-1"><?=$tls['sleep']?> <span class="badge text-bg-danger"><?=$tls['required']?></span></p>
+          <div class="mb-2">
+            <div class="form-check mb-2">
+              <input class="form-check-input"  type="radio" name="sleep" id="sleep_well" value="<?=$tls['yes']?>" required ><label class="form-check-label" for="sleep_well"> <?=$tls['yes']?></label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="sleep" id="sleep_unpleasant" value="<?=$tls['no']?>" required><label class="form-check-label" for="sleep_unpleasant"> <?=$tls['no']?></label>
+            </div>
+            <div class="form-check form-check mb-2">
+              <input class="form-check-input" type="radio" name="sleep" id="sleep_norm" value="<?=$tls['sleep_norm']?>" required><label class="form-check-label" for="sleep_norm"> <?=$tls['sleep_norm']?></label>
+            </div>
+          </div>
+          <p class="mb-1"><?=$tls['sleep_freq']?> <span class="badge text-bg-danger"><?=$tls['required']?></span></p>
+          <div class="mb-2">
+            <div class="form-check mb-2">
+              <input type="number" name="sleep_counter" id="counter" min="0" required>  <?=$tls['sleep_freqtimes']?>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="mb-1"><?=$tls['survey_title']?></p>
+          <div class="mb-2">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="survey[]" id="survey1" value="<?=$tls['survey1:']?>"><label class="form-check-label" for="survey1"><?=$tls['survey1:']?></label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="survey[]" id="survey2" value="<?=$tls['survey2']?>"><label class="form-check-label" for="survey2"><?=$tls['survey2']?></label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="survey[]" id="survey3" value="Referred by someone"><label class="form-check-label" for="survey3"><?=$tls['survey3']?></label>
+              <input class="form-control" type="text" name="survey3_who" id="survey3_who" placeholder="<?=$tls['survey3_who']?>" disabled>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="survey[]" id="survey4" value="<?=$tls['survey4']?>"><label class="form-check-label" for="survey4"><?=$tls['survey4']?></label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="survey[]" id="survey5" value="Search Engine"><label class="form-check-label" for="survey5"><?=$tls['survey5']?></label><br>
+              <input class="form-check-input" type="radio" name="search" id="survey5_1" value="<?=$tls['survey5_1']?>" disabled ><label class="form-check-label" for="survey5_1"><?=$tls['survey5_1']?></label><br>
+              <input class="form-check-input" type="radio" name="search" id="survey5_2" value="<?=$tls['survey5_2']?>!" disabled ><label class="form-check-label" for="survey5_2"><?=$tls['survey5_2']?>!</label><br>
+              <input class="form-check-input" type="radio" name="search" id="others" value="<?=$tls['others']?>" disabled ><label class="form-check-label" for="others"><?=$tls['others']?></label><br>
+            </div>
+            <p><?=$tls['survey5_3_title']?></p>
+            <input type="text" class="form-control d-inline-block" name="keyword" id="survey5_3" placeholder="<?=$tls['survey5_3']?>" disabled>
+          </div>
+          <div class="col-auto mb-3">
+            <p><?=$tls['others']?></p>
+            <textarea class="form-control" name="survey[]" rows="5" maxlength="500" placeholder="<?=$tls['survey_text']?>" ></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p><?=$tls['treatment']?></p>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="treatment[]" id="treatment1" value="<?=$tls['treatment1']?>"><label class="form-check-label" for="treatment1"><?=$tls['treatment1']?></label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="treatment[]" id="treatment2" value="<?=$tls['treatment2']?>"><label class="form-check-label" for="treatment2"><?=$tls['treatment2']?></label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="treatment[]" id="treatment3" value="<?=$tls['treatment3']?>"><label class="form-check-label" for="treatment3"><?=$tls['treatment3']?></label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="treatment[]" id="treatment4" value="<?=$tls['treatment4']?>"><label class="form-check-label" for="treatment4"><?=$tls['treatment4']?></label>
+          </div>
+          <div class="col-auto mb-3">
+            <p><?=$tls['others']?></p>
+            <textarea class="form-control" name="treatment[]" rows="5" maxlength="255" placeholder="<?=$tls['treatment4_text']?>" ></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <p><label class="form-label" for="comment"><?=$tls['comment_title']?></label><br>
+            <textarea class="form-control" name="comment" rows="5" maxlength="255" placeholder="<?=$tls['commment_text']?>" ></textarea>
+          </p>
+        </div>
+      </div>
+      <p class="text-center"><button class="btn btn-primary"><?=$tls['submit']?></button></p>
+      <p class="confidential"><strong><?=$tls['confidential']?></strong>
+      </p>
+
+    </form>
+  </div>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="calendar_en.js"></script>
+  <script>
+    const form = document.getElementsByTagName('form')[0];
+    const checkradio = document.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+    const mean_tel = document.getElementById('mean_tel');
+    const contacthours = document.getElementById('contacthours');
+    const meansothercheck = document.getElementById('meansothercheck');
+    const meansothers = document.getElementById('meansothers');
+    const contact_means = document.querySelectorAll('input[name="contact_means"]');
+    contact_means.forEach(val => {
+      val.addEventListener('change', event => {
+        if (mean_tel.checked) contacthours.removeAttribute('disabled');
+        else contacthours.setAttribute('disabled', '');
+        if (meansothercheck.checked) meansothers.removeAttribute('disabled');
+        else meansothers.setAttribute('disabled', '');
+      });
+    });
+
+    
+    const purpose = document.querySelectorAll('input[name="purpose"]');
+    const purposeotherscheck = document.getElementById('purposeotherscheck');
+    const purposeothers = document.getElementById('purposeothers');
+    purpose.forEach(val => {
+      val.addEventListener('change', event => {
+        if (purposeotherscheck.checked) purposeothers.removeAttribute('disabled');
+        else purposeothers.setAttribute('disabled', '');
+      });
+    });
+
+    const op_exp = document.querySelectorAll('input[name="op_exp"]');
+    const op_yes = document.getElementById('op_yes');
+    const op_details = document.querySelectorAll('#op_details input');
+    op_exp.forEach(val => {
+      val.addEventListener('change', event => {
+        if (op_yes.checked) {
+          op_details.forEach(inputs => {
+            inputs.removeAttribute('disabled');
+          })
+        } else {
+          op_details.forEach(inputs => {
+            inputs.setAttribute('disabled', '');
+          })
+        }
+      });
+    });
+
+    const history = document.querySelectorAll('input[name="history[]"]');
+    const history_details = document.querySelectorAll('#history_details input');
+    history.forEach(val => {
+      val.addEventListener('change', event => {
+        const history_checked = document.querySelectorAll('input[name="history[]"]:checked');
+        if (history_checked.length)  {
+          history_details.forEach(inputs => {
+            inputs.removeAttribute('disabled');
+          })
+        } else {
+          history_details.forEach(inputs => {
+            inputs.setAttribute('disabled', '');
+          })
+        }
+      });
+    });
+    const historyotherscheck = document.getElementById('historyotherscheck');
+    const historyothers = document.getElementById('historyothers');
+    historyotherscheck.addEventListener('change', event => {
+      if (historyotherscheck.checked) historyothers.removeAttribute('disabled');
+      else historyothers.setAttribute('disabled', '');
+    });
+    const bowel = document.querySelectorAll('input[name="bowel[]"]');
+    const bow_norm = document.getElementById('bow_norm');
+    const bow_diar = document.getElementById('bow_diar');
+    const bow_const = document.getElementById('bow_const');
+    bowel.forEach(val => {
+      val.addEventListener('change', event => {
+        const bowel_count = document.querySelectorAll('input[name="bowel[]"]:checked');
+        if (!bowel_count.length) bowel.forEach(val2 => val2.removeAttribute('disabled'));
+        else if (bow_norm.checked) {
+          bow_diar.setAttribute('disabled', '');
+          bow_diar.setAttribute('required', '');
+          bow_const.setAttribute('disabled', '');
+          bow_const.setAttribute('required', '');
+        } else {
+          bow_norm.setAttribute('disabled', '');
+          bow_diar.removeAttribute('required');
+          bow_const.removeAttribute('required');
+        }
+      });
+    });
+    const survey3 = document.getElementById('survey3');
+    const survey3_who = document.getElementById('survey3_who');
+    survey3.addEventListener('change', val => {
+      if (survey3.checked) survey3_who.removeAttribute('disabled');
+      else survey3_who.setAttribute('disabled', '');
+    });
+
+    const survey = document.querySelectorAll('input[name="survey[]"]');
+    const survey5 = document.getElementById('survey5');
+    const survey_g = document.getElementById('survey5_1');
+    const survey_y = document.getElementById('survey5_2');
+    const others = document.getElementById("others")
+    const keyword = document.getElementById("survey5_3");
+    survey.forEach(val=>{
+       val.addEventListener("change", val=>{
+      if(survey5.checked){
+        survey_g.removeAttribute("disabled");
+        survey_y.removeAttribute("disabled");
+        others.removeAttribute("disabled");
+        keyword.removeAttribute("disabled");
+      }
+      else{
+        survey_g.setAttribute("disabled","");
+        survey_y.setAttribute("disabled","");
+        others.setAttribute("disabled","");
+        keyword.setAttribute("disabled","");
+      } 
+    })
+  })
+  const path = window.location.href.split('?')[0];
+  const url = new URL(window.location.href);
+  let searchParams = new URLSearchParams(window.location.search);
+ 
+  const langselect = document.getElementById("langselect");
+  const langopts = document.querySelectorAll("#langselect option");
+  const currentlang = searchParams.get('lang');
+  if (currentlang) {
+    langselect.value = currentlang;
+    generateMonth(currentlang);
+    generateYears();
+  } else {
+    const browserlangs = navigator.languages;
+    for (const val of browserlangs) {
+        const b_lang = val.substr(0, 2);
+        console.log(b_lang);
+        if (val == 'zh-HK' || val == 'zh-MO') {
+            location.href = path+'?lang=zh-TW'; 
+            break;
+        } else if (b_lang == 'zh') {
+          location.href = path+'?lang=zh-CN';
+          break;
+        } else if (b_lang == 'pt') {
+          location.href = path+'?lang=pt-BR';
+          break;
+        } else {
+            let lang_match = false;
+            for (const optval of langopts) {
+              if (optval.value == b_lang) {
+                location.href = path+'?lang='+b_lang;
+                lang_match = true;
+                break;
+              }
+            }
+            if (lang_match) break;
+            else location.href = path+'?lang=en';
+        }
+    }
+  }
+  langselect.addEventListener('change', event => {
+    const langid = langselect.value;
+    location.href = path+'?lang='+langid;
+  });
+
+  window.addEventListener('beforeunload', event => {
+    event.preventDefault();
+  });
+  </script>
+</body>
+</html>

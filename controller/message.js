@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Prevent page reload
 
         let message = messageInput.value.trim();
-        let receiver_id = document.getElementById("receiver_id")?.value || "default_receiver"; // Use a fallback value
         let sender_id = document.getElementById("sender_id")?.value;
+        let receiver_id = document.getElementById("receiver_id")?.value;
 
         console.log("📤 Sending Message:", { message, sender_id, receiver_id });
 
@@ -47,7 +47,7 @@ function loadMessages() {
 
     fetch(`/KOOS-12_surveyform/controller/messageController.php?sender_id=${sender_id}&receiver_id=${receiver_id}`)
     .then(response => response.json())
-    .then(data => {
+    .then(data => { 
         console.log("🔍 Server Response (messages):", data);
 
         if (!Array.isArray(data.messages)) {
@@ -76,4 +76,4 @@ function loadMessages() {
     .catch(error => console.error("❌ Fetch Error:", error));
 }
 
-setInterval(loadMessages, 2000);
+//setInterval(loadMessages, 2000);

@@ -1,15 +1,23 @@
 <?php
 if (!$_POST) exit('Unauthorized access');
+require_once '../vendor/autoload.php';
 use Stichoza\GoogleTranslate\GoogleTranslate;
 require_once("sql.php");
-/*
-#多言語化
+
+if (!empty($_GET['lang'])) $lang = $_GET['lang'];
+else $lang = 'en';
+$path = '../lang_result/'.$lang.'.json';
+$file = fopen($path, "r");
+$json = fread($file, filesize($path));
+$tls = json_decode($json, true);
+/*#多言語化
 if (!empty($_POST['lang'])) $lang = $_POST['lang'];
 else $lang = 'en';
 $file = fopen($path, "r");
 $json = fread($file, filesize($path));
 $tls = json_decode($json, true);
 */
+
 
 if(isset($_POST["name"])){
     $name = $_POST["name"];
@@ -118,13 +126,11 @@ else{
 $tr = new GoogleTranslate();
 $tr->setSource('en'); 
 $tr->setTarget($lang);
-
-$tr_j = new GoogleTranslate();
-$tr_j->setsource($lang);
-$tr_j->setTarget('ja');
+/*
+$tr_e = new GoogleTranslate();
+$tr_e->setsource($lang);
+$tr_e->setTarget('en');
 */
-
-
 
 #SQL
 $sql = connectdb();
@@ -148,7 +154,105 @@ $KOOS_quality_of_life = 100 - ($total_quality_of_life / (4 * 4)) * 100;
 
 $total_score = ($KOOS_pain + $KOOS_function + $KOOS_quality_of_life) / 3;
 
+// 🔹 **ML Model Integration - Calling Flask API**
+$flask_url = "https://koosml.onrender.com/predict"; // Update with your deployed Render URL
+
+// Prepare JSON payload for Flask API
+$ml_data = array(
+    "features" => array(
+        "P1" => $p1,
+        "P2" => $p2,
+        "P3" => $p3,
+        "P4" => $p4,
+        "f1" => $f1,
+        "f2" => $f2,
+        "f3" => $f3,
+        "f4" => $f4,
+        "q1" => $q1,
+        "q2" => $q2,
+        "q3" => $q3,
+        "q4" => $q4,
+        "Pain" => $KOOS_pain,
+        "Function" => $KOOS_function,
+        "QOL" => $KOOS_quality_of_life
+    )
+);
+
+$options = array(
+    "http" => array(
+        "header" => "Content-Type: application/json\r\n",
+        "method" => "POST",  // Ensure this is set to POST
+        "content" => json_encode($ml_data),
+    ),
+);
+
+var_dump($flask_url);
+
+$context = stream_context_create($options);
+var_dump($context);
+
+$flask_url = "https://koosml.onrender.com/predict"; // Flask API URL
+
+$ml_data = array(
+    "features" => array(
+        "P1" => (int)$p1,
+        "P2" => (int)$p2,
+        "P3" => (int)$p3,
+        "P4" => (int)$p4,
+        "f1" => (int)$f1,
+        "f2" => (int)$f2,
+        "f3" => (int)$f3,
+        "f4" => (int)$f4,
+        "q1" => (int)$q1,
+        "q2" => (int)$q2,
+        "q3" => (int)$q3,
+        "q4" => (int)$q4,
+        "Pain" => $KOOS_pain,
+        "Function" => $KOOS_function,
+        "QOL" => $KOOS_quality_of_life
+    )
+);
+
+$ch = curl_init($flask_url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($ml_data));
+
+$ml_response = curl_exec($ch);
+$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE); // Get HTTP status code
+$curl_error = curl_error($ch); // Get cURL error if any
+curl_close($ch);
+
+// Debugging: Print API Response and Status
+//var_dump($http_status);
+//var_dump($curl_error);
+//var_dump($ml_response);
+
+$prediction = json_decode($ml_response, true);
+if (isset($prediction["prediction"][0])) {
+    $predicted_score = $prediction["prediction"][0];
+} else {
+    $predicted_score = "N/A";
+}
+
+/*var_dump($predicted_score);
+exit;
+
+
+// Debugging: Check final extracted value
+var_dump($predicted_score);
+exit;
+
+
+var_dump($ml_response);
+$prediction = json_decode($ml_response, true);
+var_dump($prediction);
+$predicted_score = $prediction["prediction"][0] ?? 'N/A';
+var_dump($predicted_score);
+exit;
+*/
 // Redirect to results.php
-header("Location: ../view/results.php?total_pain=$KOOS_pain&total_func=$KOOS_function&total_qol=$KOOS_quality_of_life&total_score=$total_score");
+header("Location: ../view/results.php?lang=$lang&total_pain=$KOOS_pain&total_func=$KOOS_function&total_qol=$KOOS_quality_of_life&total_score=$total_score&predicted_score=$predicted_score");
 exit;
 ?>

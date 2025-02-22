@@ -11,6 +11,12 @@ $patientDetails = getPatientById($patientId);
 if (!$patientDetails) {
     exit("Patient not found.");
 }
+if (isset($_GET['logout'])) {
+    session_unset(); // Remove all session variables
+    session_destroy(); // Destroy the session
+    header("Location: login.php"); // Redirect to the login page
+    exit();
+  }
 ?>
 
 <!DOCTYPE html>
@@ -20,6 +26,7 @@ if (!$patientDetails) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Detail</title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -37,16 +44,47 @@ if (!$patientDetails) {
 <body>
     <div class="patient-detail">
         <h4 class="mb-4">Patient's Detail</h4>
-        <p><strong>ID:</strong> <?= htmlspecialchars($patientDetails->id) ?></p>
-        <p><strong>Name:</strong> <?= htmlspecialchars($patientDetails->name) ?></p>
-        <p><strong>Gender:</strong> <?= htmlspecialchars($patientDetails->sex) ?></p>
-        <p><strong>Age:</strong> <?= htmlspecialchars($patientDetails->age) ?></p>
-        <p><strong>Duration:</strong> <?= htmlspecialchars($patientDetails->gap) ?></p>
-        <p><strong>KOOS Score:</strong> <?= htmlspecialchars($patientDetails->koos) ?></p>
-    <!--Add future KOOS score and comment later-->
-        <textarea class="form-control" rows="3" placeholder="Add your comment here..."></textarea>
+        <p><strong>ID:</strong> <?= htmlspecialchars($patientDetails['id']) ?></p>
+        <p><strong>Name:</strong> <?= htmlspecialchars($patientDetails['name']) ?></p>
+        <p><strong>Gender:</strong> <?= htmlspecialchars($patientDetails['sex']) ?></p>
+        <p><strong>Age:</strong> <?= htmlspecialchars($patientDetails['age']) ?></p>
+        <p><strong>Duration:</strong> <?= htmlspecialchars($patientDetails['gap']) ?></p>
+    
+        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+        <script>
+            let dataPoints = [
+                { label: "KOOS Pain", y: parseFloat(<?= json_encode($patientDetails['koos_pain']) ?>) },
+                { label: "KOOS Function", y: parseFloat(<?= json_encode($patientDetails['koos_function']) ?>) },
+                { label: "KOOS QOL", y: parseFloat(<?= json_encode($patientDetails['koos_qol']) ?>) },
+                { label: "KOOS Total", y: parseFloat(<?= json_encode($patientDetails['koos_total']) ?>) }
+            ];
+
+            let chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "KOOS Scores for Patient ID: <?= json_encode($patientId) ?>"
+                },
+                axisY: {
+                    title: "Score (0-100)",
+                    maximum: 100,
+                    minimum: 0
+                },
+                data: [{
+                    type: "column", 
+                    dataPoints: dataPoints
+                }]
+            });
+            chart.render();
+        </script>
         <br>
-        <button class="btn btn-primary">Submit</button>
-    </div>
+        <div>
+        <a href="treatment_plan.php?patient_id=<?= htmlspecialchars($patientId) ?>" class="btn btn-primary">
+        Make a treatment plan</a>
+        <a href="?logout=true" class="btn btn-danger btn-sm">Logout</a>
+        </div>
+        <br>
+        
 </body>
 </html>
+

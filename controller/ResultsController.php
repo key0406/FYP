@@ -1,9 +1,22 @@
 <?php
 require_once("sql.php");
 
+// Get language parameter, default to 'en'
+if (!empty($_GET['lang'])) {
+    $lang = $_GET['lang'];
+} else {
+    $lang = 'en';
+}
+$path = '../lang_result/' . $lang . '.json';
+$file = fopen($path, "r");
+$json = fread($file, filesize($path));
+$tls = json_decode($json, true);
+
 // DB接続
 $sql = connectdb();
-if (!$sql) exit("DB接続失敗");
+if (!$sql) {
+    exit("DB接続失敗");
+}
 
 // 最新のデータを取得
 $query = "SELECT p1, p2, p3, p4, f1, f2, f3, f4, q1, q2, q3, q4 FROM survey ORDER BY id DESC LIMIT 1";
@@ -24,12 +37,11 @@ if ($latest_entry) {
     $total_qol = $latest_entry['q1'] + $latest_entry['q2'] + $latest_entry['q3'] + $latest_entry['q4'];
     $KOOS_qol = 100 - ($total_qol / (4 * 4)) * 100; // Scale to 100
 
-    // Overall KOOS Score (optional: average of all sections)
-    $total_score = number_format(($KOOS_pain + $KOOS_function + $KOOS_quality_of_life) / 3, 3);
+    // Overall KOOS Score (average of all sections)
+    $total_score = number_format(($KOOS_pain + $KOOS_func + $KOOS_qol) / 3, 3);
 
-
-    // 結果ページに合計スコアを渡す
-    header("Location: results.php?total_pain=$KOOS_pain&total_func=$KOOS_func&total_qol=$KOOS_qol&total_score=$total_score");
+    // Redirect to the results page and pass the lang parameter along with the scores
+    header("Location: results.php?lang=$lang&total_pain=$KOOS_pain&total_func=$KOOS_func&total_qol=$KOOS_qol&total_score=$total_score");
     exit;
 } else {
     // データが見つからない場合
