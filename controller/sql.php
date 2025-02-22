@@ -120,6 +120,72 @@ function getAllPatientTreatment(){
     return $results;
 }
 
+/*function chatRequest($doctor, $patient){
+    global $pdo;
+    $statement = $pdo->prepare("SELECT * FROM chat_requests WHERE doctor_email = ? AND patient_email = ? AND status = 'approved'");
+    $statement->execute([$doctor, $patient]);
+    return $statement->rowCount() > 0;
+}
+    */
+
+function receiverMessage($receiver){
+    global $pdo;
+    $statement = $pdo->prepare("SELECT role FROM login WHERE email = :receiver_id");
+    $statement->execute([':receiver_id' => $receiver]);
+    $results = $statement->fetch(PDO::FETCH_ASSOC);
+    return $results;
+}
+
+function sendMessage($sender){
+    global $pdo;
+    $statement = $pdo->prepare("SELECT role FROM login WHERE email = :sender_id");
+    //This is for the sender_id does not exist in the login so set as a placeholder
+    $statement->execute([':sender_id' => $sender]);
+    $results = $statement->fetch(PDO::FETCH_ASSOC);
+    return $results;
+}
+
+function addChat($sender, $receiver, $message){
+    global $pdo;
+    try {
+        $insert = $pdo->prepare("INSERT INTO messages (sender_id, receiver_id, message, date) VALUES (?,?,?,NOW())");
+        $insert->execute([$sender, $receiver, $message]);
+        return ["status" => "success"];
+    } catch (Exception $e) {
+        error_log("Error inserting chat: " . $e->getMessage());
+        return ["status" => "error", "message" => "Could not send message"];
+    }
+}
+
+
+function getChatHistory($patient, $doctor){
+    global $pdo;
+    $statement = $pdo->prepare("SELECT * FROM messages WHERE 
+        (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) 
+        ORDER BY date ASC");
+    $statement->execute([$patient, $doctor, $doctor, $patient]);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function getAllChatHistory(){
+    global $pdo;
+    $statement = $pdo->prepare("SELECT * FROM messages");
+    $statement->execute();
+    $results = $statement->fetchAll(PDO::FETCH_CLASS, "Messages");
+    return $results;
+}
+
+function doesReceiverExist($receiver_id){
+    global $pdo;
+    $statement = $pdo->prepare("SELECT id FROM login WHERE id = ?");
+    $statement->execute([$receiver_id]);
+    if ($statement->rowCount() == 0) {
+        echo json_encode(["error" => "Receiver does not exist"]);
+        exit;
+    }
+} 
+
 function addTreatment(){
     global $pdo;
     

@@ -59,10 +59,10 @@ if ($user) {
     $hashed_password = $user->password;
     $role = $user->role;
 
-    var_dump($user);
-    var_dump($hashed_password);
-    var_dump($role);
-    var_dump($password);
+    //var_dump($user);
+    //var_dump($hashed_password);
+    //var_dump($role);
+    //var_dump($password);
     //exit();
 
     //This is the error log for the password verification
@@ -72,6 +72,8 @@ if ($user) {
     if (password_verify($password, $hashed_password)) {
       error_log("Password verification successful");
       //session_regenerate_id(true); // Regenerate session ID
+      $_SESSION['sender_id'] = $user->email;
+
       // Set session based on role
       if ($role === 'patient') {
           $_SESSION['auth_patient'] = ['id' => $user->id, 'email' => $user->email];

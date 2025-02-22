@@ -72,6 +72,9 @@
                 <label class="form-check-label" for="doctor">Doctor</label>
             </div>
         </div>
+        <div class="text-end mb-3">
+            <a class="text-decoration-none" href="login.php">Already have an account?</a>
+        </div>
         <button type="submit" class="btn btn-custom w-100">Submit</button>
     </form>
 </div>

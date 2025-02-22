@@ -1,4 +1,11 @@
 <?php
+session_start();
+if (empty($_SESSION['auth_doctor']) ) {
+  echo '<h1 class="text-custom">Please login to the login page</h1><br>';
+  echo '<h1 class="text-custom"><a href="login.php">Login</a></h1>';
+  exit();
+}
+
 require_once("../controller/patient_detailController.php");
 
 // Fetch either all patients or search results

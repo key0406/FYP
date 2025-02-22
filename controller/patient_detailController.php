@@ -1,4 +1,5 @@
 <?php
+//if (!$_POST) exit('Unauthorized access');
 require_once("../model/patient.php");
 require_once("sql.php");
 

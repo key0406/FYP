@@ -1,4 +1,5 @@
 <?php
+if (!$_POST) exit('Unauthorized access');
 require_once ("sql.php");
 
 // This will convert base64 data to png 

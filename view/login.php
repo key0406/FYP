@@ -58,9 +58,7 @@
         <div class="mb-3">
             <input type="password" class="form-control" name = "password" id="password" placeholder="Password" required>  
         </div>
-        <div class="text-end mb-3">
-            <a href="#signin" class="text-decoration-none">Don't have an account yet?</a>
-        </div>
+       
         <div class="d-flex justify-content-center mb-3">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="role" id="patient-login" value="patient" required>
@@ -70,6 +68,9 @@
                 <input class="form-check-input" type="radio" name="role" id="doctor-login" value="doctor" required>
                 <label class="form-check-label" for="doctor-login">Doctor</label>
             </div>
+        </div>
+        <div class="text-end mb-3">
+            <a class="text-decoration-none" href="signIn.php">Don't have an account yet?</a>
         </div>
         <button type="submit" class="btn btn-custom w-100">Login</button>
     </form>

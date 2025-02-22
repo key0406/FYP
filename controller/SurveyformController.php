@@ -1,4 +1,5 @@
 <?php
+if (!$_POST) exit('Unauthorized access');
 use Stichoza\GoogleTranslate\GoogleTranslate;
 require_once("sql.php");
 /*
