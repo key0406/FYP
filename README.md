@@ -30,6 +30,6 @@ The system integrates a PHP-based web interface for patient data management and 
 
 ## Author
 **Koki Ohira**  
-BSc Computer Science, Kingston Univercity London 
+BSc Computer Science, Kingston University London 
 Email: ohirakoki@gmail.com
 GitHub: https://github.com/key0406/FYP
