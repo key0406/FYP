@@ -2,7 +2,6 @@
 class Login2{
     private $email;
     private $password;
-    private $role;
 
     function __get($name){
         return $this->$name;

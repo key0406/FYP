@@ -4,6 +4,7 @@ class Login{
     private $email;
     private $username;
     private $password;
+    private $role;
 
     function __get($name){
         return $this->$name;
