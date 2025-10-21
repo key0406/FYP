@@ -12,8 +12,8 @@ The system integrates a PHP-based web interface for patient data management and 
 - **Backend:** PHP, MySQL  
 - **AI Model:** Python (Scikit-learn, XGBoost)  
 - **Deployment:**  
-  - FileZilla (Web hosting and data management on Sakura Cloud)  
-  - Render (Flask application deployment for ML model API)  
+  - FileZilla (Web hosting and data management on Infintity-free)  
+  - Render (Flask application deployment for ML model)  
 - **Version Control:** Git / GitHub  
 
 ## Features
