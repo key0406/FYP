@@ -6,7 +6,7 @@ $langlist = ['en','ja','fr','es','pt-BR','zh-CN','zh-TW','ko','id','th','hi','vi
 foreach($langlist as $lang){
   $tr->setSource('en');
   $tr->setTarget($lang); 
-  $path = "../lang_result/en.json";
+  $path = "../lang/en.json";
   $json = fopen($path, "r");
   $filesize = filesize($path);
   $tls = json_decode(fread($json, $filesize));
@@ -16,7 +16,7 @@ foreach($langlist as $lang){
   }
   $tls2_json = json_encode($tls2, JSON_UNESCAPED_UNICODE);
   echo $tls2_json;
-$newfile = fopen('../lang_result/'.$lang.'.json', 'w');
+$newfile = fopen('../lang/'.$lang.'.json', 'w');
 $check = fwrite($newfile, $tls2_json);
     fclose($newfile);
 }
