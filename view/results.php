@@ -13,6 +13,8 @@ if (isset($_GET['logout'])) {
   header("Location: login.php"); // Redirect to the login page
   exit();
 }
+
+$total_score = number_format($_GET['total_score'] ?? 0, 2);
 ?>
 
 <!DOCTYPE html>
@@ -104,20 +106,26 @@ if (isset($_GET['logout'])) {
       <h4 class="text-center mt-3"><?=$tls['koos_score']?></h4>
       <div class="score-box mx-auto"><?= number_format($_GET['total_score'] ?? 0, 2) ?></div>
       <p class="text-left"><?=$tls['predicted_score']?></p>
-      <div class="score-box mx-auto"><?php $predicted_value = $_GET['predicted_score'] ?? 0.0; // Fetch predicted_score from URL parameters
+      <div class="score-box mx-auto"><?= $predicted_value = number_format(ruleBasedPrediction(number_format($_GET['total_score'] ?? 0, 2) ),2) ?? 0.0; // Fetch predicted_score from URL parameters
 ?>
-<div class="score-box mx-auto"><?= htmlspecialchars(number_format($predicted_value, 1)) ?></div>
 </div>
       <div class="recommendation mt-4">
         <h5><?=$tls['recommendation']?></h5>
         <p>
-        <?=$tls['based_on']?> <strong><?= number_format($_GET['total_score'] ?? 0, 2) ?></strong><?=$tls['considered']?>
+        <?=$tls['explain']?><strong><?= number_format($_GET['total_score'] ?? 0, 2) ?></strong><?=$tls['considered']?>
         <br><strong><?=gradeDeterminer($_GET['total_score'],$tls)?></strong>
+        <br><?=$tls['explain2']?><strong><?= $predicted_value ?></strong> <?=$tls['considered']?>
+        <br><strong><?=gradeDeterminer($predicted_value,$tls)?></strong>
         </p>
         <p class="advice"><?=$tls['doctor_recommendation']?></p>
         <ul>
           <?= $recommendations = generateRecommendations($_GET['total_score'],$tls) ?>
         </ul>
+      </div>
+      <div class="details-section">
+        
+        <?=gradingScales($total_score,$predicted_value,$tls)?>
+
       </div>
       <div class="details-section">
         <h4><?=$tls['detailed_title']?></h4>
@@ -126,46 +134,6 @@ if (isset($_GET['logout'])) {
           <li><strong><?=$tls['pain']?></strong> <?= number_format($_GET['total_pain'] ?? 0, 2) ?></li>
           <li><strong><?=$tls['function']?></strong> <?= number_format($_GET['total_func'] ?? 0, 2) ?></li>
           <li><strong><?=$tls['qol']?></strong> <?= number_format($_GET['total_qol'] ?? 0, 2) ?></li>
-        </ul>
-      </div>
-      <div class="details-section">
-        <h4><?=$tls['grading']?></h4>
-        <p><?=$tls['grading_1']?></p>
-
-        <h5><?=$tls['A']?></h5>
-        <ul>
-            <li><strong><?=$tls['A_1']?></strong></li>
-            <li><?=$tls['A_2']?></li>
-            <li><?=$tls['A_3']?></li>
-            <li><?=$tls['A_4']?></li>
-        </ul>
-        <h5><?=$tls['B']?></h5>
-        <ul>
-            <li><strong><?=$tls['B_1']?></strong></li>
-            <li><?=$tls['B_2']?></li>
-            <li><?=$tls['B_3']?></li>
-            <li><?=$tls['B_4']?></li>
-        </ul>
-        <h5><?=$tls['C']?></h5>
-        <ul>
-            <li><strong><?=$tls['C_1']?></strong></li>
-            <li><?=$tls['C_2']?></li>
-            <li><?=$tls['C_3']?></li>
-            <li><?=$tls['C_4']?></li>
-        </ul>
-        <h5><?=$tls['D']?></h5>
-        <ul>
-            <li><strong><?=$tls['D_1']?></strong></li>
-            <li><?=$tls['D_2']?></li>
-            <li><?=$tls['D_3']?></li>
-            <li><?=$tls['D_4']?></li>
-        </ul>
-        <h5><?=$tls['E']?></h5>
-        <ul>
-            <li><strong><?=$tls['E_1']?></strong></li>
-            <li><?=$tls['E_2']?></li>
-            <li><?=$tls['E_3']?></li>
-            <li><?=$tls['E_4']?></li>
         </ul>
       </div>
       <div class="details-section">
@@ -206,6 +174,172 @@ if (isset($_GET['logout'])) {
 </body>
 </html>
   <?
+  function gradingScales($score, $predicted, $tls){
+    if ($predicted <= $score) {
+        if ($score >= 80) {
+            return 
+            "
+            <h5>{$tls['A']}</h5>
+            <ul>
+                <li><strong>{$tls['A_1']}</strong></li>
+                <li>{$tls['A_2']}</li>
+                <li>{$tls['A_3']}</li>
+                <li>{$tls['A_4']}</li>
+            </ul>";
+        }
+        else if ($score >= 60) {
+            return 
+            "<h5>{$tls['B']}</h5>
+            <ul>
+                <li><strong>{$tls['B_1']}</strong></li>
+                <li>{$tls['B_2']}</li>
+                <li>{$tls['B_3']}</li>
+                <li>{$tls['B_4']}</li>
+            </ul>";
+        }
+        else if ($score >= 40) {
+            return 
+            "<h5>{$tls['C']}</h5>
+            <ul>
+                <li><strong>{$tls['C_1']}</strong></li>
+                <li>{$tls['C_2']}</li>
+                <li>{$tls['C_3']}</li>
+                <li>{$tls['C_4']}</li>
+            </ul>";
+        }
+        else if ($score >= 20) {
+            return 
+            "<h5>{$tls['D']}</h5>
+            <ul>
+                <li><strong>{$tls['D_1']}</strong></li>
+                <li>{$tls['D_2']}</li>
+                <li>{$tls['D_3']}</li>
+                <li>{$tls['D_4']}</li>
+            </ul>";
+        }
+        else {
+            return 
+            "<h5>{$tls['E']}</h5>
+            <ul>
+                <li><strong>{$tls['E_1']}</strong></li>
+                <li>{$tls['E_2']}</li>
+                <li>{$tls['E_3']}</li>
+                <li>{$tls['E_4']}</li>
+            </ul>";
+        }
+    } else {
+        if ($score >= 80) {
+            $current_grade = 
+            "<h4>{$tls['grading']}</h4>
+            <p>{$tls['grading_1']}</p>
+
+            <h5>{$tls['A']}</h5>
+            <ul>
+                <li><strong>{$tls['A_1']}</strong></li>
+                <li>{$tls['A_2']}</li>
+                <li>{$tls['A_3']}</li>
+                <li>{$tls['A_4']}</li>
+            </ul>";
+        }
+        else if ($score >= 60) {
+            $current_grade = 
+            "<h5>{$tls['B']}</h5>
+            <ul>
+                <li><strong>{$tls['B_1']}</strong></li>
+                <li>{$tls['B_2']}</li>
+                <li>{$tls['B_3']}</li>
+                <li>{$tls['B_4']}</li>
+            </ul>";
+        }
+        else if ($score >= 40) {
+            $current_grade = 
+            "<h5>{$tls['C']}</h5>
+            <ul>
+                <li><strong>{$tls['C_1']}</strong></li>
+                <li>{$tls['C_2']}</li>
+                <li>{$tls['C_3']}</li>
+                <li>{$tls['C_4']}</li>
+            </ul>";
+        }
+        else if ($score >= 20) {
+            $current_grade = 
+            "<h5>{$tls['D']}</h5>
+            <ul>
+                <li><strong>{$tls['D_1']}</strong></li>
+                <li>{$tls['D_2']}</li>
+                <li>{$tls['D_3']}</li>
+                <li>{$tls['D_4']}</li>
+            </ul>";
+        }
+        else {
+            $current_grade = 
+            "<h5>{$tls['E']}</h5>
+            <ul>
+                <li><strong>{$tls['E_1']}</strong></li>
+                <li>{$tls['E_2']}</li>
+                <li>{$tls['E_3']}</li>
+                <li>{$tls['E_4']}</li>
+            </ul>";
+        }
+
+        // Determine the new predicted grading range
+        if ($predicted >= 80) {
+            $predicted_grade = 
+            "<h5>{$tls['predicted']}{$tls['A']}</h5>
+            <ul>
+                <li><strong>{$tls['A_1']}</strong></li>
+                <li>{$tls['A_2']}</li>
+                <li>{$tls['A_3']}</li>
+                <li>{$tls['A_4']}</li>
+            </ul>";
+        }
+        else if ($predicted >= 60) {
+            $predicted_grade = 
+            "<h5>{$tls['predicted']}{$tls['B']}</h5>
+            <ul>
+                <li><strong>{$tls['B_1']}</strong></li>
+                <li>{$tls['B_2']}</li>
+                <li>{$tls['B_3']}</li>
+                <li>{$tls['B_4']}</li>
+            </ul>";
+        }
+        else if ($predicted >= 40) {
+            $predicted_grade = 
+            "<h5>{$tls['predicted']}{$tls['C']}</h5>
+            <ul>
+                <li><strong>{$tls['C_1']}</strong></li>
+                <li>{$tls['C_2']}</li>
+                <li>{$tls['C_3']}</li>
+                <li>{$tls['C_4']}</li>
+            </ul>";
+        }
+        else if ($predicted >= 20) {
+            $predicted_grade = 
+            "<h5>{$tls['predicted']}{$tls['D']}</h5>
+            <ul>
+                <li><strong>{$tls['D_1']}</strong></li>
+                <li>{$tls['D_2']}</li>
+                <li>{$tls['D_3']}</li>
+                <li>{$tls['D_4']}</li>
+            </ul>";
+        }
+        else {
+            $predicted_grade = 
+            "<h5>{$tls['predicted']}{$tls['E']}</h5>
+            <ul>
+                <li><strong>{$tls['E_1']}</strong></li>
+                <li>{$tls['E_2']}</li>
+                <li>{$tls['E_3']}</li>
+                <li>{$tls['E_4']}</li>
+            </ul>";
+        }
+      }
+      return "<h4>{$tls['grading']}</h4>
+        <p>{$tls['grading_1']}</p>
+        $current_grade
+        $predicted_grade";
+    }
+  
   function gradeSelector($score,$tls){
     if($score >= 80) return $tls['grade_select_A'];
     else if($score >= 60) return $tls['grade_select_B'];
@@ -225,56 +359,68 @@ if (isset($_GET['logout'])) {
         return "
         <ul>
             <li><span class='advice'>{$tls['recommendation_1_1']}</span> – {$tls['recommendation_1_1_1']}<br>
-                <a href='https://bsmfoundation.ca/knee-osteoarthritis/#:~:text=The%20first%20step%20in%20OA,%2Dday%20function%20%5B9%5D.'>Read more</a>
+                <a href='https://bsmfoundation.ca/knee-osteoarthritis/#:~:text=The%20first%20step%20in%20OA,%2Dday%20function%20%5B9%5D.'>{$tls['read']}</a>
             </li>
             <li><span class='advice'>{$tls['recommendation_1_2']}</span> – {$tls['recommendation_1_2_1']}<br>
-                <a href='https://pubmed.ncbi.nlm.nih.gov/35091326/#:~:text=Conclusions:%20Stretching%20exercises%20can%20be,reviewregistry813).'>Read more</a>
+                <a href='https://pubmed.ncbi.nlm.nih.gov/35091326/#:~:text=Conclusions:%20Stretching%20exercises%20can%20be,reviewregistry813).'>{$tls['read']}</a>
             </li>
             <li><span class='advice'>{$tls['recommendation_1_3']}</span> – {$tls['recommendation_1_3_1']}<br>
-                <a href='https://www.hopkinsarthritis.org/patient-corner/disease-management/role-of-body-weight-in-osteoarthritis/'>Read more</a>
+                <a href='https://www.hopkinsarthritis.org/patient-corner/disease-management/role-of-body-weight-in-osteoarthritis/'>{$tls['read']}</a>
             </li>
         </ul>";
     } elseif ($score >= 60) {
         return "
         <ul>
             <li><span class='advice'>{$tls['recommendation_2_1']}</span> – {$tls['recommendation_2_1_1']}<br>
-                <a href='https://www.webmd.com/osteoarthritis/ss/slideshow-knee-exercises'>Read more</a>
+                <a href='https://www.webmd.com/osteoarthritis/ss/slideshow-knee-exercises'>{$tls['read']}</a>
             </li>
             <li><span class='advice'>{$tls['recommendation_2_2']}</span> – {$tls['recommendation_2_2_1']}<br>
-                <a href='https://www.nhs.uk/conditions/osteoarthritis/treatment/#:~:text=Hot%20or%20cold%20packs,work%20in%20the%20same%20way.'>Read more</a>
+                <a href='https://www.nhs.uk/conditions/osteoarthritis/treatment/#:~:text=Hot%20or%20cold%20packs,work%20in%20the%20same%20way.'>{$tls['read']}</a>
             </li>
             <li><span class='advice'>{$tls['recommendation_2_3']}</span> – {$tls['recommendation_2_3_1']}<br>
-                <a href='https://www.nyp.org/healthlibrary/articles/modifying-activities-for-osteoarthritis'>Read more</a>
+                <a href='https://www.nyp.org/healthlibrary/articles/modifying-activities-for-osteoarthritis'>{$tls['read']}</a>
             </li>
         </ul>";
     } elseif ($score >= 40) {
         return "
         <ul>
             <li><span class='advice'>{$tls['recommendation_3_1']}</span> – {$tls['recommendation_3_1_1']}<br>
-                <a href='https://www.mayoclinic.org/diseases-conditions/osteoarthritis/diagnosis-treatment/drc-20351930'>Read more</a>
+                <a href='https://www.mayoclinic.org/diseases-conditions/osteoarthritis/diagnosis-treatment/drc-20351930'>{$tls['read']}</a>
             </li>
             <li><span class='advice'>{$tls['recommendation_3_2']}</span> – {$tls['recommendation_3_2_1']}<br>
-                <a href='https://www.bupa.co.uk/health-information/knee-pain/treatment-options-knee-pain'>Read more</a>
+                <a href='https://www.bupa.co.uk/health-information/knee-pain/treatment-options-knee-pain'>{$tls['read']}</a>
             </li>
             <li><span class='advice'>{$tls['recommendation_3_3']}</span> – {$tls['recommendation_3_3_1']}<br>
-                <a href='https://arthritis.ca/about-arthritis/arthritis-types-(a-z)/types/osteoarthritis/osteoarthritis-self-management#:~:text=Lifestyle%20changes%20such%20as%20increasing,and%20a%20more%20positive%20outlook.'>Read more</a>
+                <a href='https://arthritis.ca/about-arthritis/arthritis-types-(a-z)/types/osteoarthritis/osteoarthritis-self-management#:~:text=Lifestyle%20changes%20such%20as%20increasing,and%20a%20more%20positive%20outlook.'>{$tls['read']}</a>
             </li>
         </ul>";
     } else {
         return "
         <ul>
             <li><span class='advice'>{$tls['recommendation_4_1']}</span> – {$tls['recommendation_4_1_1']}<br>
-                <a href='https://www.hcahealthcare.co.uk/blog/stem-cell-treatment-for-knee-osteoarthritis'>Read more</a>
+                <a href='https://www.hcahealthcare.co.uk/blog/stem-cell-treatment-for-knee-osteoarthritis'>{$tls['read']}</a>
             </li>
             <li><span class='advice'>{$tls['recommendation_4_2']}</span> – {$tls['recommendation_4_2_1']}<br>
-                <a href='https://www.nhs.uk/conditions/osteoarthritis/treatment/'>Read more</a>
+                <a href='https://www.nhs.uk/conditions/osteoarthritis/treatment/'>{$tls['read']}</a>
             </li>
             <li><span class='advice'>{$tls['recommendation_4_3']}</span> – {$tls['recommendation_4_3_1']}<br>
-                <a href='https://www.racgp.org.au/clinical-resources/clinical-guidelines/handi/patient-resources/managing-osteoarthritis/walking-aid-for-knee-or-hip-osteoarthritis'>Read more</a>
+                <a href='https://www.racgp.org.au/clinical-resources/clinical-guidelines/handi/patient-resources/managing-osteoarthritis/walking-aid-for-knee-or-hip-osteoarthritis'>{$tls['read']}</a>
             </li>
         </ul>";
     }
 }
+
+function ruleBasedPrediction($score) {
+  if ($score < 100) {
+      $increase_factor = rand(50, 70) / 100;
+      $predicted = $score * (1 + $increase_factor);
+  } else {
+      $predicted = $score;
+  }
+
+  return min(100, $predicted);
+}
+
 
 ?>
   <!-- Bootstrap JS (optional) -->
@@ -328,6 +474,5 @@ if (isset($_GET['logout'])) {
         window.location.href = url.toString();
     });
 </script>
-
 </body>
 </html>

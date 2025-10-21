@@ -70,9 +70,15 @@ $tls = json_decode($json, true);
 </select>
 
       <form class="h-adr" method="post" action="../controller/SurveyformController.php">
-      <p class="mb-1"><?= $tls['name']?></p>
+      <p class="mb-1"><?= $tls['name']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
       <input class="form-control" type="text" name="name" id="name" placeholder=<?= $tls['name_place']?> required>
-      <p class="mb-1"><?= $tls['gender']?></p>
+      <p class="mb-1"><?= $tls['gender']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
       <div class="mb-2">
         <div class="form-check form-check-inline">
           <input class="form-check-input"  type="radio" name="sex" autocomplete="sex" id="male" value="Male"><label class="form-check-label" for="male"  required> <?= $tls['male']?> </label>
@@ -81,7 +87,10 @@ $tls = json_decode($json, true);
           <input class="form-check-input" type="radio" name="sex" autocomplete="sex" id="female" value="Female"><label class="form-check-label" for="female" required> <?= $tls['female']?> </label>
         </div>
       </div>
-      <p><?= $tls['age']?> </p>
+      <p><?= $tls['age']?>  <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
       (<?= $tls['age']?>: 
       <select name="age" id="age" class="form-select d-inline-block w-auto" required>
         <option value="10">10</option>
@@ -99,7 +108,11 @@ $tls = json_decode($json, true);
       <input class="form-control" type="text" name="gap" id="gap" placeholder=<?= $tls['treatment_gap_place']?>>
       <div class="survey">
         <h2><?= $tls['survey_title']?></h2>
-        <p>※<?= $tls['survey_dec']?></p>
+        <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span>
+        <p>※</i><?= $tls['survey_dec']?></p>
         <div class="mb-2">
           <div class="form-check form-check-inline">
             <input class="form-check-input"  type="radio" name="knee" autocomplete="knee" id="left" value="left"><label class="form-check-label" for="left"  required><?= $tls['left']?></label>
@@ -110,7 +123,10 @@ $tls = json_decode($json, true);
         </div>
         <div class="mb-2" id="pain">
           <h3><?= $tls['pain']?></h3>
-          <p class="mb-1"><?= $tls['p1']?></p>
+          <p class="mb-1"><?= $tls['p1']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
           <div class="mb-2">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="p1" id="p1_0" value="0"><label class="form-check-label" for="p1_0" required><?= $tls['never']?></label>
@@ -128,7 +144,10 @@ $tls = json_decode($json, true);
               <input class="form-check-input" type="radio" name="p1" id="p1_4" value="4"><label class="form-check-label" for="p1_4" required><?= $tls['always']?></label>
             </div>
           </div>
-          <p class="mb-1"><?= $tls['p2']?></p>
+          <p class="mb-1"><?= $tls['p2']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
           <div class="mb-2">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="p2" id="p2_0" value="0"><label class="form-check-label" for="p2_0" required><?= $tls['none']?></label>
@@ -146,7 +165,10 @@ $tls = json_decode($json, true);
               <input class="form-check-input" type="radio" name="p2" id="p2_4" value="4"><label class="form-check-label" for="p2_4" required><?= $tls['extreme']?></label>
             </div>
           </div>
-          <p class="mb-1"><?= $tls['p3']?></p>
+          <p class="mb-1"><?= $tls['p3']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
           <div class="mb-2">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="p3" id="p3_0" value="0"><label class="form-check-label" for="p3_0" required><?= $tls['none']?></label>
@@ -164,7 +186,10 @@ $tls = json_decode($json, true);
               <input class="form-check-input" type="radio" name="p3" id="p3_4" value="4"><label class="form-check-label" for="p3_4" required><?= $tls['extreme']?></label>
             </div>
           </div>
-          <p class="mb-1"><?= $tls['p4']?></p>
+          <p class="mb-1"><?= $tls['p4']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
           <div class="mb-2">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="p4" id="p4_0" value="0"><label class="form-check-label" for="p4_0" required><?= $tls['none']?></label>
@@ -186,7 +211,10 @@ $tls = json_decode($json, true);
           <div class="mb-2" id="ADL">
             <h3><?= $tls['function']?></h3>
             <p><?=$tls['function_dec']?></p>
-            <p class="mb-1"><?=$tls['f1']?></p>
+            <p class="mb-1"><?=$tls['f1']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
             <div class="mb-2">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="f1" id="f1_0" value="0"><label class="form-check-label" for="f1_0" required><?=$tls['none']?></label>
@@ -204,7 +232,10 @@ $tls = json_decode($json, true);
                 <input class="form-check-input" type="radio" name="f1" id="f1_4" value="4"><label class="form-check-label" for="f1_4" required><?=$tls['extreme']?></label>
               </div>
             </div>
-            <p class="mb-1"><?=$tls['f2']?></p>
+            <p class="mb-1"><?=$tls['f2']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
             <div class="mb-2">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="f2" id="f2_0" value="0"><label class="form-check-label" for="f2_0" required><?=$tls['none']?></label>
@@ -222,7 +253,10 @@ $tls = json_decode($json, true);
                 <input class="form-check-input" type="radio" name="f2" id="f2_4" value="4"><label class="form-check-label" for="f2_4" required><?=$tls['extreme']?></label>
               </div>
             </div>
-            <p class="mb-1"><?=$tls['f3']?></p>
+            <p class="mb-1"><?=$tls['f3']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
             <div class="mb-2">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="f3" id="f3_0" value="0"><label class="form-check-label" for="f3_0" required><?=$tls['none']?></label>
@@ -240,7 +274,10 @@ $tls = json_decode($json, true);
                 <input class="form-check-input" type="radio" name="f3" id="f3_4" value="4"><label class="form-check-label" for="f3_4" required><?=$tls['extreme']?></label>
               </div>
             </div>
-            <p class="mb-1"><?=$tls['f4']?></p>
+            <p class="mb-1"><?=$tls['f4']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
             <div class="mb-2">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="f4" id="f4_0" value="0"><label class="form-check-label" for="f4_0" required><?=$tls['none']?></label>
@@ -261,7 +298,10 @@ $tls = json_decode($json, true);
           </div>
           <div class="mb-2" id="QOL">
           <h3><?=$tls['qol']?></h3>
-          <p class="mb-1"><?=$tls['q1']?></p>
+          <p class="mb-1"><?=$tls['q1']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
           <div class="mb-2">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="q1" id="q1_0" value="0"><label class="form-check-label" for="q1_0" required><?=$tls['never']?></label>
@@ -279,7 +319,10 @@ $tls = json_decode($json, true);
               <input class="form-check-input" type="radio" name="q1" id="q1_4" value="4"><label class="form-check-label" for="q1_4" required><?=$tls['constantly']?></label>
             </div>
           </div>
-          <p class="mb-1"><?=$tls['q2']?></p>
+          <p class="mb-1"><?=$tls['q2']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
           <div class="mb-2">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="q2" id="q2_0" value="0"><label class="form-check-label" for="q2_0" required><?=$tls['not']?></label>
@@ -297,7 +340,10 @@ $tls = json_decode($json, true);
               <input class="form-check-input" type="radio" name="q2" id="q2_4" value="4"><label class="form-check-label" for="q2_4" required><?=$tls['totally']?></label>
             </div>
           </div>
-          <p class="mb-1"><?=$tls['q3']?></p>
+          <p class="mb-1"><?=$tls['q3']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
           <div class="mb-2">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="q3" id="q3_0" value="0"><label class="form-check-label" for="q3_0" required><?=$tls['not']?></label>
@@ -315,7 +361,10 @@ $tls = json_decode($json, true);
               <input class="form-check-input" type="radio" name="q3" id="q3_4" value="4"><label class="form-check-label" for="q3_4" required><?=$tls['totally']?></label>
             </div>
           </div>
-          <p class="mb-1"><?=$tls['q4']?></p>
+          <p class="mb-1"><?=$tls['q4']?> <span class="text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg> <?= $tls['required'] ?></span></p>
             <div class="mb-2">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="q4" id="q4_0" value="0"><label class="form-check-label" for="q4_0" required><?=$tls['none']?></label>

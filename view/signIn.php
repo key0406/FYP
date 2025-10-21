@@ -27,40 +27,52 @@
         .btn-custom:hover {
             background-color: #c0c0c0;
         }
-        .header-logo {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
-        .form-check-inline .form-check-input {
-            margin-top: 0;
+        .error-input {
+            border: 2px solid red !important;
+            background-color: #ffebeb !important;
         }
     </style>
 </head>
 <body>
 <div class="container mt-5" id="signin">
     <h2 class="text-center mb-4">SignIn</h2>
-    <?php if (isset($_SESSION['error'])):?>
-        <div class="alert alert-danger">
-            <?= $_SESSION['error']; unset($_SESSION['error']); ?>
-        </div>
-    <?php endif; ?>
 
-    <?php if (isset($_SESSION['success'])): ?>
-        <div class="alert alert-success">
-            <?= $_SESSION['success']; unset($_SESSION['success']); ?>
-        </div>
-    <?php endif; ?>
+    <?php
+        session_start();
+        if (isset($_SESSION['success'])) {
+            echo '<div class="alert alert-success">'.$_SESSION['success'].'</div>';
+            unset($_SESSION['success']);
+        }
+    ?>
 
-    <form method="POST" action="../controller/signInController.php">
+    <form method="POST" action="../controller/signInController.php" id="signInForm">
         <div class="mb-3">
-            <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+            <input type="text" class="form-control <?php echo isset($_SESSION['error_username']) ? 'error-input' : ''; ?>" 
+                   name="username" id="username" placeholder="Username" required>
+            <?php
+            if (isset($_SESSION['error_username'])) {
+                echo '<div class="error-message">'.$_SESSION['error_username'].'</div>';
+                unset($_SESSION['error_username']);
+            }
+            ?>
         </div>
         <div class="mb-3">
-            <input type="email" class="form-control" name= "email" id="email" placeholder="Email" required>
+            <input type="email" class="form-control <?php echo isset($_SESSION['error_email']) ? 'error-input' : ''; ?>" 
+                   name="email" id="email" placeholder="Email" required>
+            <?php
+            if (isset($_SESSION['error_email'])) {
+                echo '<div class="error-message">'.$_SESSION['error_email'].'</div>';
+                unset($_SESSION['error_email']);
+            }
+            ?>
         </div>
         <div class="mb-3">
-            <input type="password" class="form-control" name = "password" id="password" placeholder="Password" required>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
         </div>
         <div class="d-flex justify-content-center mb-3">
             <div class="form-check form-check-inline">
@@ -78,4 +90,19 @@
         <button type="submit" class="btn btn-custom w-100">Submit</button>
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let emailError = document.querySelector(".error-message");
+        let usernameError = document.querySelector(".error-message");
+
+        if (emailError) {
+            document.getElementById("email").focus();
+        } else if (usernameError) {
+            document.getElementById("username").focus();
+        }
+    });
+</script>
+
 </body>
+</html>

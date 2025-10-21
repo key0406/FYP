@@ -35,9 +35,13 @@
         .form-check-inline .form-check-input {
             margin-top: 0;
         }
+
     </style>
 </head>
 <body>
+<?php session_start(); ?>
+
+
 <div class="container mt-5" id="login">
     <h2 class="text-center mb-4">Login</h2>
     <?php if (isset($_SESSION['error'])): ?>
@@ -50,32 +54,54 @@
             <?= $_SESSION['success']; unset($_SESSION['success']); ?>
         </div>
     <?php endif; ?>
+    <?php if (isset($_SESSION['role_error'])): ?>
+        <div class="alert alert-danger">
+            <?= $_SESSION['role_error']; ?>
+        </div>
+        <?php unset($_SESSION['role_error']); ?>
+    <?php endif; ?>
 
     <form class="h-adr" method="post" action="../controller/loginController.php">
         <div class="mb-3">
-            <input type="email" class="form-control" name ="email" id="email" placeholder="Email" required>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
         </div>
         <div class="mb-3">
-            <input type="password" class="form-control" name = "password" id="password" placeholder="Password" required>  
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>  
         </div>
        
         <div class="d-flex justify-content-center mb-3">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="role" id="patient-login" value="patient" required>
+                <input class="form-check-input <?php if (isset($_SESSION['selected_role']) && $_SESSION['selected_role'] !== '') echo 'role-error'; ?>" type="radio" name="role" id="patient-login" value="patient" 
+                <?php if (isset($_SESSION['selected_role']) && $_SESSION['selected_role'] === 'patient') echo 'checked'; ?> required>
                 <label class="form-check-label" for="patient-login">Patient</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="role" id="doctor-login" value="doctor" required>
+                <input class="form-check-input <?php if (isset($_SESSION['selected_role']) && $_SESSION['selected_role'] !== '') echo 'role-error'; ?>" type="radio" name="role" id="doctor-login" value="doctor" 
+                <?php if (isset($_SESSION['selected_role']) && $_SESSION['selected_role'] === 'doctor') echo 'checked'; ?> required>
                 <label class="form-check-label" for="doctor-login">Doctor</label>
             </div>
         </div>
-        <div class="text-end mb-3">
-            <a class="text-decoration-none" href="signIn.php">Don't have an account yet?</a>
-        </div>
-        <button type="submit" class="btn btn-custom w-100">Login</button>
-    </form>
+
+
+<div class="text-end mb-3">
+    <a class="text-decoration-none" href="signIn.php">Don't have an account yet?</a>
+</div>
+<button type="submit" class="btn btn-custom w-100">Login</button>
+</form> 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let roleError = document.querySelector(".error-message");
+
+        if (roleError) {
+            let roleInput = document.querySelector("input[name='role']");
+            if (roleInput) {
+                roleInput.focus();
+            }
+        }
+    });
+</script>
 </body>
 </html>
