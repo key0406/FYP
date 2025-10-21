@@ -144,21 +144,27 @@ $sql = null;
 
 // Calculate KOOS scores
 $total_pain = $p1 + $p2 + $p3 + $p4;
+$ML_Pain = ($total_pain / (4 * 4)) * 100;
 $KOOS_pain = 100 - ($total_pain / (4 * 4)) * 100;
 
 $total_function = $f1 + $f2 + $f3 + $f4;
+$ML_func = ($total_function / (4 * 4)) * 100;
 $KOOS_function = 100 - ($total_function / (4 * 4)) * 100;
 
 $total_quality_of_life = $q1 + $q2 + $q3 + $q4;
+$ML_QOL = ($total_quality_of_life / (4 * 4)) * 100;
 $KOOS_quality_of_life = 100 - ($total_quality_of_life / (4 * 4)) * 100;
 
+
 $total_score = ($KOOS_pain + $KOOS_function + $KOOS_quality_of_life) / 3;
+error_log("KOOS Pain: $KOOS_pain, Function: $KOOS_function, QOL: $KOOS_quality_of_life");
+
 
 // 🔹 **ML Model Integration - Calling Flask API**
-$flask_url = "https://koosml.onrender.com/predict"; // Update with your deployed Render URL
+/*$flask_url = "https://koosml.onrender.com/predict"; // Update with your deployed Render URL
 
 // Prepare JSON payload for Flask API
-$ml_data = array(
+/*$ml_data = array(
     "features" => array(
         "P1" => $p1,
         "P2" => $p2,
@@ -177,8 +183,9 @@ $ml_data = array(
         "QOL" => $KOOS_quality_of_life
     )
 );
+*/
 
-$options = array(
+/*$options = array(
     "http" => array(
         "header" => "Content-Type: application/json\r\n",
         "method" => "POST",  // Ensure this is set to POST
@@ -209,7 +216,7 @@ $ml_data = array(
         "q4" => (int)$q4,
         "Pain" => $KOOS_pain,
         "Function" => $KOOS_function,
-        "QOL" => $KOOS_quality_of_life
+        "QOL" => 100- $KOOS_quality_of_life
     )
 );
 
@@ -231,7 +238,7 @@ curl_close($ch);
 
 $prediction = json_decode($ml_response, true);
 if (isset($prediction["prediction"][0])) {
-    $predicted_score = $prediction["prediction"][0];
+    $predicted_score = 100- $prediction["prediction"][0];
 } else {
     $predicted_score = "N/A";
 }
@@ -253,6 +260,6 @@ var_dump($predicted_score);
 exit;
 */
 // Redirect to results.php
-header("Location: ../view/results.php?lang=$lang&total_pain=$KOOS_pain&total_func=$KOOS_function&total_qol=$KOOS_quality_of_life&total_score=$total_score&predicted_score=$predicted_score");
+header("Location: ../view/results.php?lang=$lang&total_pain=$KOOS_pain&total_func=$KOOS_function&total_qol=$KOOS_quality_of_life&total_score=$total_score");
 exit;
 ?>

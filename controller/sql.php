@@ -27,6 +27,23 @@ function addLogin($login){
     }
 }
 
+function userExists($email, $username) {
+    global $pdo;
+
+    $stmtEmail = $pdo->prepare("SELECT COUNT(*) FROM login WHERE email = ?");
+    $stmtEmail->execute([$email]);
+    $emailExists = $stmtEmail->fetchColumn() > 0;
+
+    $stmtUsername = $pdo->prepare("SELECT COUNT(*) FROM login WHERE username = ?");
+    $stmtUsername->execute([$username]);
+    $usernameExists = $stmtUsername->fetchColumn() > 0;
+
+    return [
+        "email" => $emailExists,
+        "username" => $usernameExists
+    ];
+}
+
 function getAllPatients(){
     global $pdo;
     $statement = $pdo->prepare("SELECT * FROM survey");

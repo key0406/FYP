@@ -29,21 +29,35 @@ else{
   $role = "";
 }
 
+$exists = userExists($email, $username);
+$emailExists = $exists["email"];
+$usernameExists = $exists["username"];
+
+if ($emailExists || $usernameExists) {
+    if ($emailExists) {
+        $_SESSION['error_email'] = "This email is already used";
+    }
+    if ($usernameExists) {
+        $_SESSION['error_username'] = "This username is already used.";
+    }
+    header("Location: ../view/signIn.php");
+    exit();
+}
 
 $login = new Login();
 $login->email = $email;
 $login->username = $username;
 $login->password = $password;
 $login->role = $role;
-try{
+try {
   addLogin($login);
   $_SESSION['success'] = "Register Success!";
-
-}catch(Exception $e){
-  $_SESSION['error'] = $e->getMessage();
+} catch (Exception $e) {
+  die("Database Insert Error: " . $e->getMessage());
 }
 
-header("Location: ../view/signIn.php");
+
+header("Location: ../view/login.php");
 exit;
 
 ?>

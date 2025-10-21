@@ -202,31 +202,5 @@ $sql = null;
 
 
 header("Location: ../view/treatment_result.php");
-// Fetch the signature data
-/*$stmt = $sql->prepare("SELECT signature_patient, signature_doctor FROM treatment_plan WHERE id = ?");
-$stmt->execute([1]); // Replace with the correct ID
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($row) {
-    // Decode Base64 and save as PNG
-    //Otherwise it is not possible to view the signature from DB
-    $patientSignature = $row['signature_patient'];
-    $doctorSignature = $row['signature_doctor'];
-
-    // Remove the Base64 metadata if present
-    $patientSignature = preg_replace('/^data:image\/\w+;base64,/', '', $patientSignature);
-    $patientSignature = base64_decode($patientSignature);
-
-    $doctorSignature = preg_replace('/^data:image\/\w+;base64,/', '', $doctorSignature);
-    $doctorSignature = base64_decode($doctorSignature);
-
-    // Save images
-    file_put_contents('patient_signature.png', $patientSignature);
-    file_put_contents('doctor_signature.png', $doctorSignature);
-
-    echo "Signatures saved as PNG files!";
-} else {
-    echo "No signature data found!";
-}
-    */
-    ?>
+?>

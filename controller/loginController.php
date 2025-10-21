@@ -48,6 +48,7 @@ unset($_SESSION['auth_patient'], $_SESSION['auth_doctor']);
 
 $email = filter_input(INPUT_POST, 'email');
 $password = filter_input(INPUT_POST, 'password');
+$selected_role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_STRING);
 
 // Fetch user from database
 $user = getLogin($email);
@@ -70,6 +71,12 @@ if ($user) {
     error_log("Stored hashed password: " . $hashed_password);
     // Verify password
     if (password_verify($password, $hashed_password)) {
+      if ($selected_role != $role) {
+        $_SESSION['role_error'] = "The selected role does not match the registered role.";
+        $_SESSION['selected_role'] = $selected_role;
+        header("Location: ../view/login.php");
+        exit();
+    }
       error_log("Password verification successful");
       //session_regenerate_id(true); // Regenerate session ID
       $_SESSION['sender_id'] = $user->email;

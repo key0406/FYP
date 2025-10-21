@@ -41,9 +41,7 @@ function getPatientDetails() {
         $patient->gap = $data['gap'] ?? '-';
         $patient->koos = number_format($data['koos_score'], 2); // Format KOOS score to 2 decimal places
         $koos_score = number_format($data['koos_score'], 2);
-        if($koos_score <60.0 ){
-             
-        }
+        
         $patientObjects[] = $patient;
     }
 
